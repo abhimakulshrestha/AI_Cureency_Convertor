@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env*
+!.env.example
+*.log
+test-results/
+playwright-report/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

@@ -1,0 +1,1 @@
+# No Python dependencies are needed. This app runs on Next.js via package.json.
