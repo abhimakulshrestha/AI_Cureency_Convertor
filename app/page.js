@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { ArrowLeftRight, ArrowUpRight, Coins, History, Trash2 } from "lucide-react";
-import { CURRENCIES, formatCurrencyNumber } from "../lib/currency.js";
+import { formatCurrencyNumber } from "../lib/currency.js";
 import { HISTORY_KEY, parseRecentConversions, rememberConversion } from "../lib/workspace.js";
 import { requestConversion } from "../lib/conversion-client.js";
 import ConversionTools from "./conversion-tools.js";
+import CurrencySelect from "./currency-select.js";
 
 export default function Home() {
   const [ready, setReady] = useState(false);
@@ -88,7 +89,7 @@ export default function Home() {
               <button type="button" aria-pressed={mode === "text"} onClick={() => { setMode("text"); clearResult(); }}>Text request</button>
             </div>
             {mode === "text" ? (
-              <label className="wide">Ask naturally
+              <label>Ask naturally
                 <input value={query} required maxLength={500} onChange={event => { setQuery(event.target.value); clearResult(); }} placeholder="Convert 250 USD to INR" />
               </label>
             ) : (
@@ -97,21 +98,17 @@ export default function Home() {
                   <input min="0" max="1000000000000" step="any" required type="number" value={amount} onChange={event => { setAmount(event.target.value); clearResult(); }} />
                 </label>
                 <label>From
-                  <select value={from} onChange={event => { setFrom(event.target.value); clearResult(); }}>
-                    {CURRENCIES.map(([code, name]) => <option key={code} value={code}>{code} - {name}</option>)}
-                  </select>
+                  <CurrencySelect value={from} onChange={event => { setFrom(event.target.value); clearResult(); }} />
                 </label>
                 <button type="button" className="swap" title="Swap currencies" aria-label="Swap currencies" onClick={() => { setFrom(to); setTo(from); clearResult(); }}>
                   <ArrowLeftRight size={20} aria-hidden="true" />
                 </button>
                 <label>To
-                  <select value={to} onChange={event => { setTo(event.target.value); clearResult(); }}>
-                    {CURRENCIES.map(([code, name]) => <option key={code} value={code}>{code} - {name}</option>)}
-                  </select>
+                  <CurrencySelect value={to} onChange={event => { setTo(event.target.value); clearResult(); }} />
                 </label>
               </div>
             )}
-            <button className="primary" disabled={loading}>
+            <button className="primary">
               {loading ? "Converting..." : mode === "text" ? "Convert request" : `Convert ${from} to ${to}`}
             </button>
           </fieldset>
@@ -123,7 +120,7 @@ export default function Home() {
           <div role="status" aria-label="Conversion result" aria-live="polite" aria-atomic="true" aria-busy={loading}>
             {result ? (
               <section className="result">
-                <p className="label">{formatCurrencyNumber(result.amount)} {result.from} equals</p>
+                <p>{formatCurrencyNumber(result.amount)} {result.from} equals</p>
                 <strong className={resultText.length > 14 ? "long-result" : undefined}><bdi>{resultText}</bdi>{" "}{result.to}</strong>
                 <p>1 {result.from} = {formatCurrencyNumber(result.rate)} {result.to}</p>
                 <span>{result.date ? `Rate date: ${result.date} · Source: ${result.source}` : "Same currency · No exchange needed"}</span>

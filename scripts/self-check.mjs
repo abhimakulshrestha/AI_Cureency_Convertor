@@ -4,6 +4,7 @@ import {
   formatCurrencyNumber,
   normalizeAmount,
   normalizeCurrency,
+  normalizeConversion,
   parseCurrencyQuery
 } from "../lib/currency.js";
 
@@ -22,6 +23,10 @@ assert.deepEqual(parseCurrencyQuery("convert 250 usd to inr"), {
 assert.equal(normalizeCurrency("eur"), "EUR");
 assert.throws(() => normalizeCurrency("BTC"), /supported currency/);
 assert.equal(normalizeAmount(0), 0);
+assert.deepEqual(normalizeConversion({ amount: "10", from: " usd ", to: "inr", query: "private text" }), { amount: 10, from: "USD", to: "INR" });
+for (const input of [null, [], "", {}, { amount: 10, from: "BTC", to: "USD" }]) {
+  assert.throws(() => normalizeConversion(input));
+}
 for (const value of [true, false, null, [], [10], {}, "", " ", "0x10", -1, Infinity, NaN, 1e13]) {
   assert.throws(() => normalizeAmount(value));
 }

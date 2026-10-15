@@ -1,10 +1,9 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { ArrowRight, CalendarDays, Coins, Globe2, LoaderCircle, RotateCcw } from "lucide-react";
-import { CURRENCIES, formatCurrencyNumber } from "../lib/currency.js";
+import { formatCurrencyNumber } from "../lib/currency.js";
 import { calculateTravelBudget } from "../lib/workspace.js";
 import { requestConversion } from "../lib/conversion-client.js";
+import CurrencySelect from "./currency-select.js";
 
 function TravelBudget({ conversion }) {
   const [days, setDays] = useState("7");
@@ -15,7 +14,7 @@ function TravelBudget({ conversion }) {
   catch (failure) { error = failure.message; }
 
   return (
-    <section className="travel-tool" aria-label="Travel budget planner">
+    <section aria-label="Travel budget planner">
       <div className="tool-heading">
         <div><p className="section-kicker">YOUR TRIP, IN {conversion.to}</p><h2>Daily spending plan</h2></div>
         <CalendarDays size={26} aria-hidden="true" />
@@ -65,9 +64,7 @@ function ComparisonRow({ conversion, currency, index, onChange }) {
     <li className="comparison-row">
       <label className="comparison-currency">
         <span className="sr-only">Compare currency {index + 1}</span>
-        <select value={currency} onChange={event => onChange(event.target.value)}>
-          {CURRENCIES.map(([code, name]) => <option key={code} value={code}>{code} - {name}</option>)}
-        </select>
+        <CurrencySelect value={currency} onChange={event => onChange(event.target.value)} />
       </label>
       <div className="comparison-value" role="status" aria-label={`Comparison ${index + 1}`}>
         {error ? <span className="error">Rate unavailable</span> : current ? (

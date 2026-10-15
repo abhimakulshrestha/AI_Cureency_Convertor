@@ -1,14 +1,7 @@
-import { CURRENCY_CODES, calculateConversion, normalizeAmount, normalizeCurrency, parseCurrencyQuery } from "../../../lib/currency.js";
+import { CURRENCY_CODES, calculateConversion, normalizeConversion, parseCurrencyQuery } from "../../../lib/currency.js";
 
 function failure(message, status) {
   return Object.assign(new Error(message), { status });
-}
-
-function validateInput(input) {
-  if (!input || typeof input !== "object" || Array.isArray(input)) {
-    throw failure("Enter an amount and two currencies.", 400);
-  }
-  return { amount: normalizeAmount(input.amount), from: normalizeCurrency(input.from), to: normalizeCurrency(input.to) };
 }
 
 async function parseQuery(query) {
@@ -64,7 +57,7 @@ async function parseQuery(query) {
   try {
     const parsed = JSON.parse(data.candidates?.[0]?.content?.parts?.map(part => part.text || "").join("") || "");
     if (parsed.valid !== true) throw new Error("Invalid request");
-    return { ...validateInput(parsed), parser: "gemini" };
+    return { ...normalizeConversion(parsed), parser: "gemini" };
   } catch {
     throw failure("Enter one conversion with an amount and two specific currencies, such as 100 USD to INR.", 422);
   }
@@ -111,7 +104,7 @@ export async function POST(request) {
     try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); }
     catch { throw failure("Send valid JSON.", 400); }
     if (!body || typeof body !== "object" || Array.isArray(body)) throw failure("Send a conversion object.", 400);
-    const input = Object.hasOwn(body, "query") ? await parseQuery(body.query) : validateInput(body);
+    const input = Object.hasOwn(body, "query") ? await parseQuery(body.query) : normalizeConversion(body);
     return Response.json({ ...input, ...await getRate(input.amount, input.from, input.to) });
   } catch (error) {
     return Response.json({ error: error.status ? error.message : "Enter a valid amount and supported currencies." }, { status: error.status || 400 });

@@ -25,8 +25,6 @@ The root `.env` is loaded by Next.js. Set `GEMINI_API_KEY` there and use `GEMINI
 
 Manual conversions and explicit requests such as `100 USD to INR` work without Gemini. Other wording requires a working Gemini key and available quota. The text is sent to Google for extraction; exchange rates always come from Frankfurter. Failed AI requests show an error and leave manual conversion available.
 
-`requirements.txt` is intentionally comments-only: the application and its backend run on Node.js, so dependencies are in `package.json`. `convert.ipynb` is the original Python experiment, not the app backend. Its former embedded exchange-service credential has been removed; that experiment now expects `EXCHANGE_RATE_API_KEY` separately.
-
 ## Verification
 
 ```powershell

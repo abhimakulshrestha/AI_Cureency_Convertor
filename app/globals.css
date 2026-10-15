@@ -4,7 +4,6 @@
   --muted: #53616f;
   --line: #d8e1e8;
   --paper: #f6f8fb;
-  --panel: #ffffff;
   --accent: #0f7b6c;
   --accent-dark: #0a594e;
   --warn: #b3261e;
@@ -76,10 +75,6 @@ label {
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 700;
-}
-
-.wide {
-  width: 100%;
 }
 
 .fieldRow {

@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { calculateTravelBudget, rememberConversion, parseRecentConversions } from "../lib/workspace.js";
 
 test("travel budget deducts the source fee before conversion and daily allocation", () => {
-  assert.deepEqual(calculateTravelBudget(100, 95, "5", "2"), { feeInSource: 2, feeInTarget: 190, available: 9310, daily: 1862 });
-  assert.deepEqual(calculateTravelBudget(0, 95, 7, 0), { feeInSource: 0, feeInTarget: 0, available: 0, daily: 0 });
+  assert.deepEqual(calculateTravelBudget(100, 95, "5", "2"), { feeInSource: 2, available: 9310, daily: 1862 });
+  assert.deepEqual(calculateTravelBudget(0, 95, 7, 0), { feeInSource: 0, available: 0, daily: 0 });
   assert.equal(calculateTravelBudget(100, 1, 1, 20).daily, 80);
 });
 
